@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from Models.User import User
 from database.database import db_session
 import nltk
@@ -15,18 +15,16 @@ def home():
     tokenized = nltk.word_tokenize(sentence)
     nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
 
+    # test = User.query.all()
+
     # print(nouns)
     return sid.polarity_scores(sentence)
 
-@app.route('/user')
-def user():
-    test = User.query.all()
-    # test = User.query.filter_by(username='michel_dupont').first()
-    # test = database.db.session.query(User).filter(User.username == 'michel_dupont')
+@app.route('/me/<id>')
+def user(id):
+    test = User.query.filter_by(id=id).first()
 
-    print(test)
-
-    return 'test'
+    return {'username': test.username, 'firstname': test.firstname, 'lastname': test.lastname}
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
