@@ -20,11 +20,11 @@ def home():
 
 @app.route('/user')
 def user():
-    # test = User.query.all()
+    test = User.query.all()
     # test = User.query.filter_by(username='michel_dupont').first()
     # test = database.db.session.query(User).filter(User.username == 'michel_dupont')
 
-    # print(test)
+    print(test)
 
     return 'test'
 
