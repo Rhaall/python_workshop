@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from Models.User import User
 from database.database import db_session
 import nltk
@@ -25,6 +25,11 @@ def user(id):
     test = User.query.filter_by(id=id).first()
 
     return {'username': test.username, 'firstname': test.firstname, 'lastname': test.lastname}
+
+@app.route('/test', methods=['POST'])
+def test():
+    print(request.json['test'])
+    return "test"
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
