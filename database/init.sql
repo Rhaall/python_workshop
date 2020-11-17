@@ -1,6 +1,6 @@
 /* ############ INSERTION ############# */
 
-INSERT INTO user VALUES (DEFAULT, 'michel_dupont', 'Michel', 'Dupont');
+INSERT INTO "user" VALUES (DEFAULT, 'michel_dupont', 'Michel', 'Dupont');
 
 INSERT INTO location VALUES
 (DEFAULT, 'Arles'),
