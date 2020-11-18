@@ -56,7 +56,20 @@ def ChooseEvent(id):
                 db_session.add(KeywordByUsers)
 
     db_session.commit()
-    return ""
+    IdBestWord = CheckBestWord(id)
+    return Keyword.query.filter_by(id=IdBestWord).first().label
+
+def CheckBestWord(id):
+    listofwordbyuser = KeywordByUser.query.filter_by(id_user=id)
+    max = -150
+    id_bestword=-1
+    for word in listofwordbyuser:
+        CurrentValue = word.pos_rate - ((word.neutral_rate + word.neg_rate*2) / 3)
+        print(CurrentValue)
+        if CurrentValue > max :
+            max = CurrentValue
+            id_bestword = word.id_keyword
+    return id_bestword
 
 @app.route('/events', methods=['POST'])
 def events():
