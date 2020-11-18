@@ -5,6 +5,8 @@ from Models.Keyword import Keyword
 from Models.KeywordByUser import KeywordByUser
 from Models.Location import Location
 from database.database import db_session, get_data
+from googletrans import Translator, constants
+from pprint import pprint
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -16,6 +18,9 @@ sentence = 'i love sports, this sensation of exaltation in nature is truly bless
 
 @app.route('/')
 def home():
+    # translator = Translator()
+    # translation = translator.translate("Bonjour à tous")
+    # print(f"{translation.origin} ({translation.src}) --> {translation.text} ({translation.dest})")
     return ""
 
 
@@ -44,20 +49,20 @@ def show_event(id):
             if hasattr(keyword, 'id'):
                 insertOrUpdateKeywordByUsers(keyword, values, id)
 
-    db_session.commit()
-
     best_keyword_id = getBestKeywordId(id)
     keyword = Keyword.query.filter_by(id=best_keyword_id).first()
     if not hasattr(keyword, 'event_id'):
         return 'no keyword found for this user'
 
     event = Event.query.filter_by(id=keyword.event_id).first()
-    if request.json and 'location' in request.json:
-        location = Location.query.filter_by(city=request.json['location']).first()
-        if hasattr(location, 'id'):
-            event = Event.query.filter_by(id=keyword.event_id, location_id=location.id).first()
+    if not request.json or 'location' not in request.json:
+        return "location is missing"
 
-    return event.label if (hasattr(event, 'label')) else ""
+    location = Location.query.filter_by(city=request.json['location']).first()
+    if hasattr(location, 'id'):
+        event = Event.query.filter_by(id=keyword.event_id, location_id=location.id).first()
+
+    return getEventJson(event, location) if (hasattr(event, 'label')) else ""
 
 
 def insertOrUpdateKeywordByUsers(keyword, values, user_id):
@@ -74,6 +79,7 @@ def insertOrUpdateKeywordByUsers(keyword, values, user_id):
             neg_rate=values['neg'], neutral_rate=values['neu'], count=1
         )
         db_session.add(user_keyword)
+    db_session.commit()
 
 
 def getBestKeywordId(id):
@@ -93,14 +99,21 @@ def events():
     events = {}
     if request.json and 'location' in request.json:
         location_id = request.json['location']
-        location = Location.query.filter_by(city=request.json['location']).first()
+        location = Location.query.filter_by(city=location_id).first()
 
         if hasattr(location, 'id'):
             query = Event.query.filter_by(location_id=location.id)
             for event in query:
-                events[event.id] = event.label
+                events[event.id] = getEventJson(event, location)
 
     return events
+
+
+def getEventJson(event, location):
+    return {
+        'event': {'label': event.label, 'description': event.description, 'picture': event.picture},
+        'location': location.city
+    }
 
 
 @app.route('/login', methods=['POST'])
