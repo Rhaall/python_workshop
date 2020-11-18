@@ -66,6 +66,20 @@ def login():
     usr = User.query.filter_by(username=username).first()
     return {"id" : usr.id}
 
+@app.route('/bind/user/<idUser>', methods=['POST'])
+def bind(idUser):
+    return {
+        "user":idUser,
+        "social_network": request.json['social_network']
+    }
+
+@app.route('/unbind/user/<idUser>', methods=['POST'])
+def unbind(idUser):
+    return {
+        "user":idUser,
+        "social_network": request.json['social_network']
+    }
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
