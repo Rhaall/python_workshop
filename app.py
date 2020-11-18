@@ -59,10 +59,12 @@ def show_event(id):
         return "location is missing"
 
     location = Location.query.filter_by(city=request.json['location']).first()
+    response = "Location does not exist"
     if hasattr(location, 'id'):
         event = Event.query.filter_by(id=keyword.event_id, location_id=location.id).first()
+        response = getEventJson(event, location) if (hasattr(event, 'label')) else "no event found"
 
-    return getEventJson(event, location) if (hasattr(event, 'label')) else ""
+    return response
 
 
 def insertOrUpdateKeywordByUsers(keyword, values, user_id):
