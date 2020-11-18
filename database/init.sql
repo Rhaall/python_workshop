@@ -15,7 +15,7 @@ VALUES (DEFAULT, 'Rap Concert', 'Come and attend Eminem''s last concert for his 
        (DEFAULT, 'Tree climbing', 'Want to spend a moment with friends close to nature, come and try the tree climbing', 'image.workshop.tsukiru.com/accrobranche.jpg', 1),
        (DEFAULT, 'Tennis tournaments', 'A fun inter-generational tournament and a thrilling afternoon guaranteed by this tennis tournament', 'image.workshop.tsukiru.com/tennis.jpg', 3),
        (DEFAULT, 'Fitness trail', 'Uber eats bringing you too much regret? a place to absolve your sins', 'image.workshop.tsukiru.com/parcours.jpg', 1),
-       (DEFAULT, 'Cinematographic projection', 'Christopher Nolan''s new film is already available in your nearest cinema', 'image.workshop.tsukiru.com/ciné.jpg', 1),
+       (DEFAULT, 'Cinematographic projection', 'Christopher Nolan''s new film is already available in your nearest cinema', 'image.workshop.tsukiru.com/cinema.jpg', 1),
        (DEFAULT, 'Exposure', 'On the occasion of its last provocative work, the city offers a look back on the career of the street artist Banksy', 'image.workshop.tsukiru.com/exposition.jpg', 2);
 
 
