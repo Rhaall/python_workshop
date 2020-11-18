@@ -8,8 +8,8 @@ class Event(Base):
     __tablename__ = 'event'
     id = Column(Integer, primary_key=True)
     label = Column(String(100), unique=True, nullable=False)
-    description = Column(String(100), unique=True, nullable=False)
-    picture = Column(String(255), unique=True, nullable=False)
+    description = Column(String(2000), nullable=False)
+    picture = Column(String(255), nullable=False)
     location_id = Column(Integer, ForeignKey('location.id'), nullable=False)
     Keyword = relationship("Keyword")
 
