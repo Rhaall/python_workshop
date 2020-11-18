@@ -8,8 +8,8 @@ import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 app = Flask(__name__)
-# sentence = 'i love sports, this sensation of exaltation in nature is truly blessed'
-sentence = 'i hate sports and nature !'
+sentence = 'i love sports, this sensation of exaltation in nature is truly blessed'
+# sentence = 'i hate sports and nature !'
 
 @app.route('/')
 def home():
@@ -57,7 +57,10 @@ def ChooseEvent(id):
 
     db_session.commit()
     IdBestWord = CheckBestWord(id)
-    return Keyword.query.filter_by(id=IdBestWord).first().label
+    keyword = Keyword.query.filter_by(id=IdBestWord).first()
+    event = Event.query.filter_by(id=keyword.event_id).first()
+
+    return event.label if (hasattr(event, 'label')) else ""
 
 def CheckBestWord(id):
     listofwordbyuser = KeywordByUser.query.filter_by(id_user=id)
@@ -65,7 +68,6 @@ def CheckBestWord(id):
     id_bestword=-1
     for word in listofwordbyuser:
         CurrentValue = word.pos_rate - ((word.neutral_rate + word.neg_rate*2) / 3)
-        print(CurrentValue)
         if CurrentValue > max :
             max = CurrentValue
             id_bestword = word.id_keyword
