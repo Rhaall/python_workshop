@@ -26,7 +26,7 @@ def home():
 
 
 @app.route('/eventUser/<id>')
-def ChooseEvent(id):
+def show_event(id):
     user = User.query.filter_by(id=id).first()
     if hasattr(user, 'id') == False:
         return 'L\'utilisateur n\'existe pas !'
@@ -41,37 +41,41 @@ def ChooseEvent(id):
     for noun in nouns:
         keyword = Keyword.query.filter_by(label=noun).first()
         if hasattr(keyword, 'id'):
-            user_keyword = KeywordByUser.query.filter_by(id_keyword=keyword.id, id_user=user.id).first()
-            if hasattr(user_keyword, 'id'):
-                count = user_keyword.count
-                user_keyword.pos_rate = ((user_keyword.pos_rate * count) + values['pos']) / (count + 1)
-                user_keyword.neg_rate = ((user_keyword.neg_rate * count) + values['neg']) / (count + 1)
-                user_keyword.neutral_rate = ((user_keyword.neutral_rate * count) + values['neu']) / (count + 1)
-                user_keyword.count = count + 1
-            else:
-                KeywordByUsers = KeywordByUser(
-                    id_user=id, id_keyword=keyword.id, pos_rate=values['pos'],
-                    neg_rate=values['neg'], neutral_rate=values['neu'], count=1
-                )
-                db_session.add(KeywordByUsers)
+            insertOrUpdateKeywordByUsers(keyword, values, id)
 
     db_session.commit()
-    IdBestWord = CheckBestWord(id)
-    keyword = Keyword.query.filter_by(id=IdBestWord).first()
+    best_keyword_id = getBestKeywordId(id)
+    keyword = Keyword.query.filter_by(id=best_keyword_id).first()
     event = Event.query.filter_by(id=keyword.event_id).first()
 
     return event.label if (hasattr(event, 'label')) else ""
 
-def CheckBestWord(id):
+def insertOrUpdateKeywordByUsers(keyword, values, user_id):
+    user_keyword = KeywordByUser.query.filter_by(id_keyword=keyword.id, id_user=user_id).first()
+    if hasattr(user_keyword, 'id'):
+        count = user_keyword.count
+        user_keyword.pos_rate = ((user_keyword.pos_rate * count) + values['pos']) / (count + 1)
+        user_keyword.neg_rate = ((user_keyword.neg_rate * count) + values['neg']) / (count + 1)
+        user_keyword.neutral_rate = ((user_keyword.neutral_rate * count) + values['neu']) / (count + 1)
+        user_keyword.count = count + 1
+    else:
+        user_keyword = KeywordByUser(
+            id_user=user_id, id_keyword=keyword.id, pos_rate=values['pos'],
+            neg_rate=values['neg'], neutral_rate=values['neu'], count=1
+        )
+        db_session.add(user_keyword)
+
+
+def getBestKeywordId(id):
     listofwordbyuser = KeywordByUser.query.filter_by(id_user=id)
     max = -150
-    id_bestword=-1
-    for word in listofwordbyuser:
-        CurrentValue = word.pos_rate - ((word.neutral_rate + word.neg_rate*2) / 3)
-        if CurrentValue > max :
-            max = CurrentValue
-            id_bestword = word.id_keyword
-    return id_bestword
+    keyword_id = -1
+    for word_by_user in listofwordbyuser:
+        current_value = word_by_user.pos_rate - ((word_by_user.neutral_rate + word_by_user.neg_rate * 2) / 3)
+        if current_value > max:
+            max = current_value
+            keyword_id = word_by_user.id_keyword
+    return keyword_id
 
 @app.route('/events', methods=['POST'])
 def events():
