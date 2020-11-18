@@ -26,10 +26,11 @@ def user(id):
 
     return {'username': test.username, 'firstname': test.firstname, 'lastname': test.lastname}
 
-@app.route('/test', methods=['POST'])
-def test():
-    print(request.json['test'])
-    return "test"
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json['username']
+    usr = User.query.filter_by(username=username).first()
+    return {"id" : usr.id}
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
