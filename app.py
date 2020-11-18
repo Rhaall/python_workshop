@@ -11,17 +11,37 @@ import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 app = Flask(__name__)
-sentence = 'i love sports, this sensation of exaltation in nature is truly blessed'
-
-
-# sentence = 'i hate sports and nature !'
 
 @app.route('/')
 def home():
     # translator = Translator()
     # translation = translator.translate("Bonjour à tous")
     # print(f"{translation.origin} ({translation.src}) --> {translation.text} ({translation.dest})")
-    return ""
+    data = {}
+    posts_by_user = get_data()
+
+    for posts_by_user_id in posts_by_user:
+        posts = posts_by_user[posts_by_user_id]
+        for post_id in posts:
+            post = posts[post_id]
+
+            sid = SentimentIntensityAnalyzer()
+            values = sid.polarity_scores(post)
+
+            is_noun = lambda pos: pos[:2] == 'NN'
+            tokenized = nltk.word_tokenize(post)
+            nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
+
+            posts_by_user[posts_by_user_id][post_id] = {'1_post': post}
+            posts_by_user[posts_by_user_id][post_id]['2_value'] = values
+            posts_by_user[posts_by_user_id][post_id]['3_nouns'] = nouns
+            posts_by_user[posts_by_user_id][post_id]['4_keyword'] = 'no keyword found'
+            for noun in nouns:
+                keyword = Keyword.query.filter_by(label=noun).first()
+                if hasattr(keyword, 'id'):
+                    posts_by_user[posts_by_user_id][post_id]['4_keyword'] = keyword.label
+
+    return posts_by_user
 
 
 @app.route('/eventUser/<id>', methods=['POST'])
