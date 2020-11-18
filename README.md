@@ -10,6 +10,7 @@ PostgreSQL
 ## Dependencies :
 PIP :
 - Flask
+- Flask-cors
 - Alchemy
 - NLTK :
   - Vader lexicon
