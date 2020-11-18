@@ -46,6 +46,9 @@ def show_event(id):
     db_session.commit()
     best_keyword_id = getBestKeywordId(id)
     keyword = Keyword.query.filter_by(id=best_keyword_id).first()
+    if not hasattr(keyword, 'event_id'):
+        return 'Aucun mot clé trouvé pour cet utilisateur'
+
     event = Event.query.filter_by(id=keyword.event_id).first()
 
     return event.label if (hasattr(event, 'label')) else ""
