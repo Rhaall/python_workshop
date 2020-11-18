@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from Models.User import User
+from Models.Event import Event
 from database.database import db_session
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -20,11 +21,20 @@ def home():
     # print(nouns)
     return sid.polarity_scores(sentence)
 
+@app.route('/events', methods=['POST'])
+def events():
+    location_id = request.json['location']
+    query = Event.query.filter_by(location_id=location_id)
+    events = {}
+    for event in query:
+        events[event.id] = event.label
+
+    return events
+
 @app.route('/me/<id>')
 def user(id):
-    test = User.query.filter_by(id=id).first()
-
-    return {'username': test.username, 'firstname': test.firstname, 'lastname': test.lastname}
+    user = User.query.filter_by(id=id).first()
+    return {'username': user.username, 'firstname': user.firstname, 'lastname': user.lastname}
 
 @app.route('/login', methods=['POST'])
 def login():
