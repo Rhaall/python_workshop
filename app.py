@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 from Models.User import User
 from Models.Event import Event
 from Models.Keyword import Keyword
@@ -11,6 +12,7 @@ import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def home():
