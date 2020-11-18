@@ -16,16 +16,7 @@ sentence = 'i love sports, this sensation of exaltation in nature is truly bless
 
 @app.route('/')
 def home():
-    sid = SentimentIntensityAnalyzer()
-
-    is_noun = lambda pos: pos[:2] == 'NN'
-    tokenized = nltk.word_tokenize(sentence)
-    nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
-
-    # test = User.query.all()
-
-    # print(nouns)
-    return sid.polarity_scores(sentence)
+    return ""
 
 
 @app.route('/eventUser/<id>', methods=['POST'])
