@@ -10,8 +10,5 @@ class Location(Base):
     city = Column(String(100), unique=True, nullable=False)
     Events = relationship("Event")
 
-    def __init__(self, city=None):
-        self.city = city
-
     def __repr__(self):
         return '<Location %r>' % self.city

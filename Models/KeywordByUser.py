@@ -13,15 +13,5 @@ class KeywordByUser(Base):
     neutral_rate = Column(Float(), nullable=False)
     count = Column(Integer, nullable=False)
 
-    def __init__(self, username=None, id_user=None, id_keyword=None, pos_rate=None, neg_rate=None, neutral_rate=None, count=None):
-        self.username = username
-        self.id = id
-        self.id_user = id_user
-        self.id_keyword = id_keyword
-        self.pos_rate = pos_rate
-        self.neg_rate = neg_rate
-        self.neutral_rate = neutral_rate
-        self.count = count
-
     def __repr__(self):
-        return '<KeywordByUser %r>' % self.username
+        return '<KeywordByUser %r>' % self.id

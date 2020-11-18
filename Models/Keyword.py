@@ -10,8 +10,5 @@ class Keyword(Base):
     label = Column(String(100), unique=True, nullable=False)
     keyword_by_user = relationship("KeywordByUser")
 
-    def __init__(self, label=None):
-        self.label = label
-
     def __repr__(self):
         return '<Keyword %r>' % self.label

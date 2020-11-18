@@ -12,10 +12,5 @@ class User(Base):
     lastname = Column(String(100), nullable=False)
     keyword_by_user = relationship("KeywordByUser")
 
-    def __init__(self, username=None, firstname=None, lastname=None):
-        self.username = username
-        self.firstname = firstname
-        self.lastname = lastname
-
     def __repr__(self):
         return '<User %r>' % self.username

@@ -1,6 +1,8 @@
 from flask import Flask, request
 from Models.User import User
 from Models.Event import Event
+from Models.Keyword import Keyword
+from Models.KeywordByUser import KeywordByUser
 from database.database import db_session
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -20,6 +22,28 @@ def home():
 
     # print(nouns)
     return sid.polarity_scores(sentence)
+
+@app.route('/eventUser/<id>')
+def ChooseEvent(id):
+    # print("choose event")
+    message = "i love sports, this sensation of exaltation in nature is truly blessed"
+    sid = SentimentIntensityAnalyzer()
+    values = sid.polarity_scores(message)
+    # print(values)
+    is_noun = lambda pos: pos[:2] == 'NN'
+    tokenized = nltk.word_tokenize(message)
+    nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
+    print(nouns)
+    count = 0
+    for noun in nouns:
+        keyword = Keyword.query.filter_by(label=noun).first()
+        if hasattr(keyword, 'id'):
+            count = count + 1
+            KeywordByUsers = KeywordByUser(id_user=id, id_keyword=keyword.id, pos_rate=values['pos'], neg_rate=values['neg'],
+                                           neutral_rate=values['neu'], count=1)
+            db_session.add(KeywordByUsers)
+            db_session.commit()
+    return "yey"
 
 @app.route('/events', methods=['POST'])
 def events():
