@@ -4,7 +4,7 @@ from Models.Event import Event
 from Models.Keyword import Keyword
 from Models.KeywordByUser import KeywordByUser
 from Models.Location import Location
-from database.database import db_session
+from database.database import db_session, get_data
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
@@ -25,19 +25,27 @@ def show_event(id):
     if hasattr(user, 'id') == False:
         return 'user does not exist'
 
-    sid = SentimentIntensityAnalyzer()
-    values = sid.polarity_scores(sentence)
+    posts = get_data()
+    if str(user.id) not in posts:
+        return "no post for this user"
 
-    is_noun = lambda pos: pos[:2] == 'NN'
-    tokenized = nltk.word_tokenize(sentence)
-    nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
+    for post in posts[str(user.id)]:
+        post = posts[str(user.id)][post]
 
-    for noun in nouns:
-        keyword = Keyword.query.filter_by(label=noun).first()
-        if hasattr(keyword, 'id'):
-            insertOrUpdateKeywordByUsers(keyword, values, id)
+        sid = SentimentIntensityAnalyzer()
+        values = sid.polarity_scores(post)
+
+        is_noun = lambda pos: pos[:2] == 'NN'
+        tokenized = nltk.word_tokenize(post)
+        nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos)]
+
+        for noun in nouns:
+            keyword = Keyword.query.filter_by(label=noun).first()
+            if hasattr(keyword, 'id'):
+                insertOrUpdateKeywordByUsers(keyword, values, id)
 
     db_session.commit()
+
     best_keyword_id = getBestKeywordId(id)
     keyword = Keyword.query.filter_by(id=best_keyword_id).first()
     if not hasattr(keyword, 'event_id'):
