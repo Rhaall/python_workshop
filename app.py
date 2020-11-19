@@ -154,6 +154,7 @@ def getEventJson(event, location):
             'label': event.label,
             'description': event.description,
             'title': event.title,
+            'type': event.type,
             'company_name': event.company_name,
             'price': event.price,
             'date': event.date,
