@@ -15,6 +15,7 @@ class Event(Base):
     date = Column(String(100), nullable=False)
     duration = Column(String(100), nullable=False)
     address = Column(String(100), nullable=False)
+    zipcode = Column(String(100), nullable=False)
     picture1 = Column(String(255), nullable=False)
     picture2 = Column(String(255), nullable=False)
     picture3 = Column(String(255), nullable=False)
