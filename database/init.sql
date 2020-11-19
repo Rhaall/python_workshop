@@ -12,7 +12,7 @@ VALUES (DEFAULT, 'Arles'),
        (DEFAULT, 'Avignon');
 
 
-INSERT INTO event (id, label, title, type, description, company_name, price, date, duration, address, zipcode, picture1,
+INSERT INTO event (id, label, type, title, description, company_name, price, date, duration, address, zipcode, picture1,
                    picture2, picture3, location_id)
 VALUES (DEFAULT,
         'Natural gardening', 'nature',
