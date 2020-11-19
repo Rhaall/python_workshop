@@ -9,6 +9,7 @@ class Event(Base):
     id = Column(Integer, primary_key=True)
     label = Column(String(100), unique=True, nullable=False)
     title = Column(Text(), nullable=False)
+    type = Column(Text(), nullable=False)
     description = Column(Text(), nullable=False)
     company_name = Column(String(100), nullable=False)
     price = Column(String(100), nullable=False)
