@@ -57,7 +57,7 @@ def show_event(id):
         return "no post for this user"
 
     for post in posts[str(user.id)]:
-        post = posts[str(user.id)][post]
+        post = posts[str(user.id)][post].lower()
 
         sid = SentimentIntensityAnalyzer()
         values = sid.polarity_scores(post)
