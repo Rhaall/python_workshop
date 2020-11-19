@@ -128,9 +128,25 @@ def events():
         if hasattr(location, 'id'):
             query = Event.query.filter_by(location_id=location.id)
             for event in query:
-                events[event.id] = getEventJson(event, location)
+                count = 0
+                pos = 0
+                pos_count = 0
+                keywords = Keyword.query.filter_by(event_id=event.id)
+                for keyword in keywords:
+                    users_keywords = KeywordByUser.query.filter_by(id_keyword=keyword.id)
+                    for user_keyword in users_keywords:
+                        count += count + 1
+                        pos += user_keyword.pos_rate
+                        pos_count += user_keyword.count
+                if count > 0:
+                    pos = pos / count
+                events[str(pos*pos_count)] = getEventJson(event, location)
 
-    return events
+    sorted_events = {}
+    for i in sorted(events.keys(), reverse=True):
+        sorted_events[i] = events[i]
+
+    return sorted_events
 
 
 def getEventJson(event, location):
