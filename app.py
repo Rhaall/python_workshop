@@ -151,7 +151,19 @@ def events():
 
 def getEventJson(event, location):
     return {
-        'event': {'label': event.label, 'description': event.description, 'picture': event.picture},
+        'event': {
+            'label': event.label,
+            'description': event.description,
+            'title': event.title,
+            'company_name': event.company_name,
+            'price': event.price,
+            'date': event.date,
+            'duration': event.duration,
+            'address': event.address,
+            'picture1': event.picture1,
+            'picture2': event.picture2,
+            'picture3': event.picture3
+        },
         'location': location.city
     }
 
