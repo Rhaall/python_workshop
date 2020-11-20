@@ -140,7 +140,7 @@ def events():
                         pos_count += user_keyword.count
                 if count > 0:
                     pos = pos / count
-                events[str(pos*pos_count)] = getEventJson(event, location, str(pos*pos_count))
+                events[str(pos*pos_count)] = getEventJson(event, location)
 
     sorted_events = {}
     for i in sorted(events.keys(), reverse=True):
@@ -149,7 +149,7 @@ def events():
     return sorted_events
 
 
-def getEventJson(event, location, rate=0):
+def getEventJson(event, location):
     return {
             'label': event.label,
             'description': event.description,
@@ -164,8 +164,7 @@ def getEventJson(event, location, rate=0):
             'zipcode': event.zipcode,
             'picture1': event.picture1,
             'picture2': event.picture2,
-            'picture3': event.picture3,
-            'rate': rate
+            'picture3': event.picture3
     }
 
 
